@@ -37,7 +37,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 function sendEdpMessage(message) {
-	chrome.tabs.query({ url: ["https://*.ecole-directe.plus/*"] }, (tabs) => {
+	chrome.tabs.query({ url: ["https://*.ecole-tres-directe.vercel.app/*"] }, (tabs) => {
 		tabs.forEach(tab => {
 			chrome.tabs.sendMessage(tab.id, message);
 		});

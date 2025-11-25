@@ -1,7 +1,7 @@
 
 const api = typeof browser === "undefined" ? chrome : browser;
 
-const allowedDomains = ["ecole-directe.plus", "ecoledirecte.com"];
+const allowedDomains = ["ecole-tres-directe.vercel.app", "ecoledirecte.com"];
 
 async function getActiveTabDomain() {
 	let domain;
