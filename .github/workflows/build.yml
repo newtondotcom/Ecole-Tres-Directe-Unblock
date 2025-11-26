@@ -1,0 +1,90 @@
+name: Build and release Firefox extension
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - manifest.common.json
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release-firefox:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Read extension version from manifest.common.json
+        id: meta
+        run: |
+          VERSION=$(node -p "require('./manifest.common.json').version")
+          echo "Extension version: $VERSION"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Build Firefox extension
+        run: |
+          node build.js firefox
+
+      - name: Package Firefox extension
+        id: package
+        run: |
+          VERSION="${{ steps.meta.outputs.version }}"
+          ARCHIVE_NAME="ecole-tres-directe-unblock-firefox-v${VERSION}.zip"
+          cd dist/firefox
+          zip -r "../../${ARCHIVE_NAME}" .
+          cd ../..
+          echo "archive_path=${ARCHIVE_NAME}" >> "$GITHUB_OUTPUT"
+
+      - name: Create git tag if needed
+        id: create_tag
+        run: |
+          TAG="${{ steps.meta.outputs.tag }}"
+
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Tag $TAG already exists, skipping creation."
+            echo "created=false" >> "$GITHUB_OUTPUT"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git tag "$TAG"
+            git push origin "$TAG"
+            echo "Tag $TAG created and pushed."
+            echo "created=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create GitHub release
+        if: steps.create_tag.outputs.created == 'true'
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.meta.outputs.tag }}
+          release_name: Ecole Tres Directe Unblock v${{ steps.meta.outputs.version }}
+          body: Automatic release of Firefox extension for version ${{ steps.meta.outputs.version }}.
+          draft: false
+          prerelease: false
+
+      - name: Upload Firefox extension asset
+        if: steps.create_tag.outputs.created == 'true'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./${{ steps.package.outputs.archive_path }}
+          asset_name: ${{ steps.package.outputs.archive_path }}
+          asset_content_type: application/zip
+
+
