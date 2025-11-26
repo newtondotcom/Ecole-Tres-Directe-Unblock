@@ -1,6 +1,6 @@
 {
 	"name": "Ecole Tres Directe Unblock",
-	"version": "0.2.9.1",
+	"version": "0.2.9.2",
 	"description": "Permet le fonctionnement du site Ecole Tres Directe sur PC. Fait la passerelle entre votre ordinateur et l'API d'EcoleDirecte.",
 	"homepage_url": "https://ecole-tres-directe.vercel.app/login",
 	"content_scripts": [
