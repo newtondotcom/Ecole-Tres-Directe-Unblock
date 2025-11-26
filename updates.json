@@ -2,6 +2,10 @@
   "addons": {
     "{etdu-firefox-self-host@ecole-tres-directe.vercel.app}": {
       "updates": [
+        {
+          "version": "0.2.9.2",
+          "update_link": "https://github.com/newtondotcom/Ecole-Tres-Directe-Unblock/releases/download/v0.2.9.2/ecole-tres-directe-unblock-firefox-v0.2.9.2.xpi"
+        }
       ]
     }
   }
