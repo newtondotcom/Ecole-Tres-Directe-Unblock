@@ -28,19 +28,46 @@ jobs:
           echo "VERSION=$VERSION" >> "$GITHUB_ENV"
           echo "TAG=v$VERSION" >> "$GITHUB_ENV"
 
+      - name: Update ressources.json manifest
+        run: |
+          bun update-ressources-json.ts
+
+      - name: Detect version change from generated files
+        run: |
+          FILES=""
+          for f in updates.json ressources.json; do
+            if [ -f "$f" ]; then
+              FILES="$FILES $f"
+            fi
+          done
+
+          if [ -z "$FILES" ]; then
+            echo "No generated files found (updates.json). Assuming no version change."
+            echo "VERSION_CHANGED=false" >> "$GITHUB_ENV"
+          elif git diff --quiet -- $FILES; then
+            echo "No changes detected in generated files: $FILES. Skipping release steps."
+            echo "VERSION_CHANGED=false" >> "$GITHUB_ENV"
+          else
+            echo "Changes detected in generated files: $FILES. Release steps will run."
+            echo "VERSION_CHANGED=true" >> "$GITHUB_ENV"
+          fi
+
       - name: Build Firefox extension
+        if: env.VERSION_CHANGED == 'true'
         run: |
           bun build.js firefox
 
-      - name: Package Firefox extension
+      - name: Package Firefox extension (.xpi)
+        if: env.VERSION_CHANGED == 'true'
         run: |
-          ARCHIVE_NAME="ecole-tres-directe-unblock-firefox-v${{ env.VERSION }}.zip"
+          XPI_NAME="ecole-tres-directe-unblock-firefox-v${{ env.VERSION }}.xpi"
           cd dist/firefox
-          zip -r "../../${ARCHIVE_NAME}" .
+          zip -r "../../${XPI_NAME}" .
           cd ../..
-          echo "ARCHIVE_NAME=${ARCHIVE_NAME}" >> "$GITHUB_ENV"
+          echo "XPI_NAME=${XPI_NAME}" >> "$GITHUB_ENV"
 
       - name: Create git tag if needed
+        if: env.VERSION_CHANGED == 'true'
         run: |
           if git rev-parse "${{ env.TAG }}" >/dev/null 2>&1; then
             echo "Tag ${{ env.TAG }} already exists, skipping creation."
@@ -55,7 +82,7 @@ jobs:
           fi
 
       - name: Create GitHub release
-        if: env.TAG_CREATED == 'true'
+        if: env.VERSION_CHANGED == 'true' && env.TAG_CREATED == 'true'
         id: create_release
         uses: actions/create-release@v1
         env:
@@ -68,14 +95,27 @@ jobs:
           prerelease: false
 
       - name: Upload Firefox extension asset
-        if: env.TAG_CREATED == 'true'
+        if: env.VERSION_CHANGED == 'true' && env.TAG_CREATED == 'true'
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{ env.ARCHIVE_NAME }}
-          asset_name: ${{ env.ARCHIVE_NAME }}
-          asset_content_type: application/zip
+          asset_path: ./${{ env.XPI_NAME }}
+          asset_name: ${{ env.XPI_NAME }}
+          asset_content_type: application/x-xpinstall
+
+      - name: Commit updated update manifests
+        if: env.VERSION_CHANGED == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add updates.json ressources.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "chore: update Firefox manifests for v${VERSION}"
+            git push
+          fi
 
 
