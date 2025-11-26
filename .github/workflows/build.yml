@@ -22,66 +22,60 @@ jobs:
       - uses: oven-sh/setup-bun@v2
 
       - name: Read extension version from manifest.common.json
-        id: meta
         run: |
           VERSION=$(bun -p "require('./manifest.common.json').version")
           echo "Extension version: $VERSION"
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          echo "TAG=v$VERSION" >> "$GITHUB_ENV"
 
       - name: Build Firefox extension
         run: |
           bun build.js firefox
 
       - name: Package Firefox extension
-        id: package
         run: |
-          VERSION="${{ steps.meta.outputs.version }}"
-          ARCHIVE_NAME="ecole-tres-directe-unblock-firefox-v${VERSION}.zip"
+          ARCHIVE_NAME="ecole-tres-directe-unblock-firefox-v${{ env.VERSION }}.zip"
           cd dist/firefox
           zip -r "../../${ARCHIVE_NAME}" .
           cd ../..
-          echo "archive_path=${ARCHIVE_NAME}" >> "$GITHUB_OUTPUT"
+          echo "ARCHIVE_NAME=${ARCHIVE_NAME}" >> "$GITHUB_ENV"
 
       - name: Create git tag if needed
-        id: create_tag
         run: |
-          TAG="${{ steps.meta.outputs.tag }}"
-
-          if git rev-parse "$TAG" >/dev/null 2>&1; then
-            echo "Tag $TAG already exists, skipping creation."
-            echo "created=false" >> "$GITHUB_OUTPUT"
+          if git rev-parse "${{ env.TAG }}" >/dev/null 2>&1; then
+            echo "Tag ${{ env.TAG }} already exists, skipping creation."
+            echo "TAG_CREATED=false" >> "$GITHUB_ENV"
           else
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
-            git tag "$TAG"
-            git push origin "$TAG"
-            echo "Tag $TAG created and pushed."
-            echo "created=true" >> "$GITHUB_OUTPUT"
+            git tag "${{ env.TAG }}"
+            git push origin "${{ env.TAG }}"
+            echo "Tag ${{ env.TAG }} created and pushed."
+            echo "TAG_CREATED=true" >> "$GITHUB_ENV"
           fi
 
       - name: Create GitHub release
-        if: steps.create_tag.outputs.created == 'true'
+        if: env.TAG_CREATED == 'true'
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.meta.outputs.tag }}
-          release_name: Ecole Tres Directe Unblock v${{ steps.meta.outputs.version }}
-          body: Automatic release of Firefox extension for version ${{ steps.meta.outputs.version }}.
+          tag_name: ${{ env.TAG }}
+          release_name: Ecole Tres Directe Unblock v${{ env.VERSION }}
+          body: Automatic release of Firefox extension for version ${{ env.VERSION }}.
           draft: false
           prerelease: false
 
       - name: Upload Firefox extension asset
-        if: steps.create_tag.outputs.created == 'true'
+        if: env.TAG_CREATED == 'true'
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{ steps.package.outputs.archive_path }}
-          asset_name: ${{ steps.package.outputs.archive_path }}
+          asset_path: ./${{ env.ARCHIVE_NAME }}
+          asset_name: ${{ env.ARCHIVE_NAME }}
           asset_content_type: application/zip
 
 
