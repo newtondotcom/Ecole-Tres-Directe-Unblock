@@ -39,13 +39,35 @@ jobs:
             throw new Error('Unable to read extension version');
           }
 
+          const chromiumManifest = JSON.parse(fs.readFileSync('manifest.chromium.json', 'utf8'));
+          const firefoxManifest = JSON.parse(fs.readFileSync('manifest.firefox.json', 'utf8'));
+          const releaseBase = `https://github.com/${repo}/releases/download/v${version}`;
+
           const payload = {
             version,
             tag: `v${version}`,
-            download_url: `https://github.com/${repo}/releases/download/v${version}/Ecole-Tres-Directe-Unblock-v${version}.zip`,
             source_manifest: 'manifest.common.json',
+            browsers: {
+              chromium: {
+                manifest: 'manifest.chromium.json',
+                manifest_version: chromiumManifest.manifest_version,
+                download_url: `${releaseBase}/Ecole-Tres-Directe-Unblock-chromium-v${version}.zip`,
+                build_command: 'node build.js chromium'
+              },
+              firefox: {
+                manifest: 'manifest.firefox.json',
+                manifest_version: firefoxManifest.manifest_version,
+                download_url: `${releaseBase}/Ecole-Tres-Directe-Unblock-firefox-v${version}.zip`,
+                build_command: 'node build.js firefox',
+                update_url: firefoxManifest.browser_specific_settings?.gecko?.update_url
+              }
+            },
             last_updated: new Date().toISOString()
           };
+
+          if (!payload.browsers.firefox.update_url) {
+            delete payload.browsers.firefox.update_url;
+          }
 
           fs.writeFileSync('extension-version.json', JSON.stringify(payload, null, 2) + '\n');
           EOF

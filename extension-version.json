@@ -1,7 +1,19 @@
 {
   "version": "0.2.9",
   "tag": "v0.2.9",
-  "download_url": "https://github.com/newtondotcom/Ecole-Tres-Directe-Unblock/releases/download/v0.2.9/Ecole-Tres-Directe-Unblock-v0.2.9.zip",
   "source_manifest": "manifest.common.json",
+  "browsers": {
+    "chromium": {
+      "manifest": "manifest.chromium.json",
+      "download_url": "https://github.com/newtondotcom/Ecole-Tres-Directe-Unblock/releases/download/v0.2.9/Ecole-Tres-Directe-Unblock-chromium-v0.2.9.zip",
+      "build_command": "node build.js chromium"
+    },
+    "firefox": {
+      "manifest": "manifest.firefox.json",
+      "download_url": "https://github.com/newtondotcom/Ecole-Tres-Directe-Unblock/releases/download/v0.2.9/Ecole-Tres-Directe-Unblock-firefox-v0.2.9.zip",
+      "build_command": "node build.js firefox",
+      "update_url": "https://unblock.ecole-tres-directe.vercel.app/updates.json"
+    }
+  },
   "last_updated": "2025-11-26T00:00:00Z"
 }
