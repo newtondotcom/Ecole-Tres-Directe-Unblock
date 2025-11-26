@@ -52,6 +52,10 @@ jobs:
             echo "VERSION_CHANGED=true" >> "$GITHUB_ENV"
           fi
 
+      - name: Install dependencies for Firefox build
+        if: env.VERSION_CHANGED == 'true'
+        run: bun i -g web-ext
+
       - name: Build Firefox extension
         if: env.VERSION_CHANGED == 'true'
         run: |
