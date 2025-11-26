@@ -1,11 +1,12 @@
+import fs from "fs";
+import path from "path";
 
-const fs = require("fs");
-const path = require("path");
+type SupportedBrowser = "chromium" | "firefox";
 
-const supportedBrowsers = ["chromium", "firefox"]
+const supportedBrowsers: SupportedBrowser[] = ["chromium", "firefox"];
 
-function mergeManifest(browser) {
-	let browserManifestFileName;
+function mergeManifest(browser: SupportedBrowser): void {
+	let browserManifestFileName: string;
 
 	switch (browser) {
 		case "chromium":
@@ -33,21 +34,21 @@ function mergeManifest(browser) {
 }
 
 
-function copyDir(src, dest, browser) {
-	function shouldCopyFile(fileName, browser) {
-		const blacklist = ["build.js", "README.md"]
+function copyDir(src: string, dest: string, browser: SupportedBrowser): void {
+	function shouldCopyFile(fileName: string, browser: SupportedBrowser): boolean {
+		const blacklist = ["build.js", "build.ts", "README.md", "package.json", "updates.json", "update-updates-json.ts"];
 		for (let supportedBrowser of supportedBrowsers) {
 			if (supportedBrowser !== browser) {
 				if (fileName.split(".").includes(supportedBrowser) || fileName.includes("manifest") || blacklist.includes(fileName)) {
-					return false
+					return false;
 				}
 			}
 		}
 
-		return true
+		return true;
 	}
 
-	function isDangerousSubdirectory(src, dest) {
+	function isDangerousSubdirectory(src: string, dest: string): boolean {
 		const normalizedSrcPath = src.replace(/\\/g, '/');
 		const normalizedDestPath = dest.replace(/\\/g, '/');
 		const directoryOccurencies = normalizedDestPath.split("/").filter(directory => normalizedSrcPath.split("/")[0].includes(directory)).length;
@@ -94,7 +95,7 @@ function copyDir(src, dest, browser) {
 				}
 
 				if (entry.isDirectory()) {
-					copyDir(srcPath, destPath);
+					copyDir(srcPath, destPath, browser);
 				} else {
 					fs.copyFile(srcPath, destPath, (err) => {
 						if (err) {
@@ -112,21 +113,26 @@ function copyDir(src, dest, browser) {
 
 // check the target browser
 if (process.argv.length < 3) {
-	console.error("Usage: node build.js <browser>");
+	console.error("Usage: bun build.ts <browser>");
 	process.exit(1);
 }
 
-const browser = process.argv[2].toLowerCase();
+const browser = process.argv[2].toLowerCase() as SupportedBrowser;
 
-async function build(browser) {
+if (!supportedBrowsers.includes(browser)) {
+	console.error(`Unsupported browser: ${browser}. Supported: ${supportedBrowsers.join(", ")}`);
+	process.exit(1);
+}
+
+async function build(browser: SupportedBrowser): Promise<void> {
 	// ensure the folders are created
-	await fs.mkdir("dist", { recursive: true }, () => { })
+	await fs.promises.mkdir("dist", { recursive: true });
 	for (let supportedBrowser of supportedBrowsers) {
-		await fs.mkdir(`dist/${supportedBrowser}`, { recursive: true }, () => { });
+		await fs.promises.mkdir(`dist/${supportedBrowser}`, { recursive: true });
 	}
 
 	mergeManifest(browser);
-	copyDir(".", `dist/${browser}`, browser)
+	copyDir(".", `dist/${browser}`, browser);
 	setTimeout(() => console.log(`${browser} extension successfully built`), 100); // currently broken
 }
 

@@ -55,15 +55,17 @@ jobs:
       - name: Build Firefox extension
         if: env.VERSION_CHANGED == 'true'
         run: |
-          bun build.js firefox
+          bun build.ts firefox
 
       - name: Package Firefox extension (.xpi)
         if: env.VERSION_CHANGED == 'true'
         run: |
+          export AMO_JWT_ISSUER=${{ secrets.AMO_JWT_ISSUER }}
+          export AMO_JWT_SECRET=${{ secrets.AMO_JWT_SECRET }}
+          bun sign
+          XPI_GEN_NAME=$(find web-ext-artifacts -name "*.xpi")
           XPI_NAME="ecole-tres-directe-unblock-firefox-v${{ env.VERSION }}.xpi"
-          cd dist/firefox
-          zip -r "../../${XPI_NAME}" .
-          cd ../..
+          mv ${XPI_GEN_NAME} ${XPI_NAME}
           echo "XPI_NAME=${XPI_NAME}" >> "$GITHUB_ENV"
 
       - name: Create git tag if needed
