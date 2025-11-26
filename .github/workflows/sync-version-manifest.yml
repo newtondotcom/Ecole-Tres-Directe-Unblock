@@ -1,0 +1,66 @@
+name: Sync extension-version.json
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - manifest.common.json
+      - extension-version.json
+      - .github/workflows/sync-version-manifest.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-version-file:
+    if: ${{ github.actor != 'github-actions[bot]' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Read version from manifest
+        id: manifest_version
+        run: echo "value=$(node -p \"require('./manifest.common.json').version\")" >> "$GITHUB_OUTPUT"
+
+      - name: Generate extension-version.json
+        env:
+          VERSION: ${{ steps.manifest_version.outputs.value }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          node <<'EOF'
+          const fs = require('fs');
+          const version = process.env.VERSION;
+          const repo = process.env.REPOSITORY;
+
+          if (!version) {
+            throw new Error('Unable to read extension version');
+          }
+
+          const payload = {
+            version,
+            tag: `v${version}`,
+            download_url: `https://github.com/${repo}/releases/download/v${version}/Ecole-Tres-Directe-Unblock-v${version}.zip`,
+            source_manifest: 'manifest.common.json',
+            last_updated: new Date().toISOString()
+          };
+
+          fs.writeFileSync('extension-version.json', JSON.stringify(payload, null, 2) + '\n');
+          EOF
+
+      - name: Commit version manifest if changed
+        env:
+          VERSION: ${{ steps.manifest_version.outputs.value }}
+        run: |
+          if git diff --quiet extension-version.json; then
+            echo 'No changes to commit.'
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add extension-version.json
+          git commit -m "chore: sync extension-version.json for v${VERSION}"
+          git push
