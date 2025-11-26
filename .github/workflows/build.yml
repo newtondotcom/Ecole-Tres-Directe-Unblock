@@ -28,14 +28,14 @@ jobs:
           echo "VERSION=$VERSION" >> "$GITHUB_ENV"
           echo "TAG=v$VERSION" >> "$GITHUB_ENV"
 
-      - name: Update ressources.json manifest
+      - name: Update updates.json manifest
         run: |
-          bun update-ressources-json.ts
+          bun update-updates-json.ts
 
       - name: Detect version change from generated files
         run: |
           FILES=""
-          for f in updates.json ressources.json; do
+          for f in updates.json ; do
             if [ -f "$f" ]; then
               FILES="$FILES $f"
             fi
@@ -110,7 +110,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add updates.json ressources.json
+          git add updates.json
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else
