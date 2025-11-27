@@ -1,10 +1,6 @@
 # Ecole Tres Directe Unblock
-<!-- 
-| Chrome | Firefox |
-|---|---|
-| <a href="https://chrome.google.com/webstore/detail/hoppscotch-browser-extens/amknoiejhlmhancpahfcfcfhllgkpbld"><picture><source media="(prefers-color-scheme: dark)" srcset="https://gist.githubusercontent.com/liyasthomas/f65059863bfd701559aebe3257ec9cc8/raw/54d5c1457fd54f15f968b39bdf2aba1c4f8b452b/chrome-badge-dark.svg"><source media="(prefers-color-scheme: light)" srcset="https://gist.githubusercontent.com/liyasthomas/f65059863bfd701559aebe3257ec9cc8/raw/54d5c1457fd54f15f968b39bdf2aba1c4f8b452b/chrome-badge-light.svg"><img alt="Firefox" src="https://gist.githubusercontent.com/liyasthomas/f65059863bfd701559aebe3257ec9cc8/raw/54d5c1457fd54f15f968b39bdf2aba1c4f8b452b/chrome-badge-light.svg"></picture></a> | <a href="https://addons.mozilla.org/en-US/firefox/addon/hoppscotch/"><picture><source media="(prefers-color-scheme: dark)" srcset="https://gist.githubusercontent.com/liyasthomas/f65059863bfd701559aebe3257ec9cc8/raw/54d5c1457fd54f15f968b39bdf2aba1c4f8b452b/firefox-badge-dark.svg"><source media="(prefers-color-scheme: light)" srcset="https://gist.githubusercontent.com/liyasthomas/f65059863bfd701559aebe3257ec9cc8/raw/54d5c1457fd54f15f968b39bdf2aba1c4f8b452b/firefox-badge-light.svg"><img alt="Firefox" src="https://gist.githubusercontent.com/liyasthomas/f65059863bfd701559aebe3257ec9cc8/raw/54d5c1457fd54f15f968b39bdf2aba1c4f8b452b/firefox-badge-light.svg"></picture></a> | -->
 
-[Ecole Tres Directe](https://github.com/Magic-Fishes/Ecole-Directe-Plus) is a website (unofficial) built by EcoleDirecte users and for EcoleDirecte users.
+[Ecole Tres Directe](https://github.com/newtondotcom/ecole-tres-directe) is a website (unofficial) built by EcoleDirecte users and for EcoleDirecte users.
 
 
 > [!IMPORTANT]
