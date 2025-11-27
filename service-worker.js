@@ -12,24 +12,24 @@ function getBrowser() {
 
 const userBrowser = getBrowser();
 
-chrome.declarativeNetRequest.updateEnabledRulesets(
+browser.declarativeNetRequest.updateEnabledRulesets(
 	{ enableRulesetIds: ["change_origin"] }
 )
 
-// chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+// browser.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
 // 	if (changeInfo.status === "complete") {
-// 		chrome.scripting.executeScript({
+// 		browser.scripting.executeScript({
 // 			target: { tabId: tab.id },
 // 			files: ["content-scripts/DOMInjectionBridge.js"]
 // 		});
 // 	}
 // });
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
 	if (message.type === "GET_EXTENSION_INFO") {
 		const extensionInfo = {
-			name: chrome.runtime.getManifest().name,
-			version: chrome.runtime.getManifest().version
+			name: browser.runtime.getManifest().name,
+			version: browser.runtime.getManifest().version
 		};
 		sendResponse(extensionInfo);
 	}
@@ -37,15 +37,15 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 function sendEdpMessage(message) {
-	chrome.tabs.query({ url: ["https://*.ecole-tres-directe.vercel.app/*"] }, (tabs) => {
+	browser.tabs.query({ url: ["https://*.ecole-tres-directe.vercel.app/*"] }, (tabs) => {
 		tabs.forEach(tab => {
-			chrome.tabs.sendMessage(tab.id, message);
+			browser.tabs.sendMessage(tab.id, message);
 		});
 	});
 }
 
 async function updateCookiesRules(cookies) {
-	const removeRuleIds = await chrome.declarativeNetRequest.getDynamicRules()
+	const removeRuleIds = await browser.declarativeNetRequest.getDynamicRules()
 		.then(rules => rules.map(rule => rule.id));
 
 	const rules = [];
@@ -82,7 +82,7 @@ async function updateCookiesRules(cookies) {
 		},
 	});
 
-	await chrome.declarativeNetRequest.updateDynamicRules({
+	await browser.declarativeNetRequest.updateDynamicRules({
 		removeRuleIds: removeRuleIds,
 		addRules: rules
 	});
@@ -117,7 +117,7 @@ function interceptCookieGTK(details) {
 	return { responseHeaders: headers };
 }
 
-chrome.webRequest.onHeadersReceived.addListener(
+browser.webRequest.onHeadersReceived.addListener(
 	interceptCookieGTK,
 	{ urls: ["*://api.ecoledirecte.com/v3/login.awp*"] },
 	userBrowser === "Firefox" ? ["responseHeaders"] : ["responseHeaders", "extraHeaders"]
