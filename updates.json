@@ -9,6 +9,10 @@
         {
           "version": "0.2.9.3",
           "update_link": "https://github.com/newtondotcom/Ecole-Tres-Directe-Unblock/releases/download/v0.2.9.3/ecole-tres-directe-unblock-firefox-v0.2.9.3.xpi"
+        },
+        {
+          "version": "0.3.0",
+          "update_link": "https://github.com/newtondotcom/Ecole-Tres-Directe-Unblock/releases/download/v0.3.0/ecole-tres-directe-unblock-firefox-v0.3.0.xpi"
         }
       ]
     }
