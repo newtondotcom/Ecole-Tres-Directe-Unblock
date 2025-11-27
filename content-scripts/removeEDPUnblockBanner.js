@@ -1,6 +1,6 @@
 
 setTimeout(() => {
-	chrome.runtime.sendMessage({ type: 'GET_EXTENSION_INFO' }, (response) => {
+	browser.runtime.sendMessage({ type: 'GET_EXTENSION_INFO' }, (response) => {
 		if (response) {
 			const message = {
 				type: "EDP_UNBLOCK",
