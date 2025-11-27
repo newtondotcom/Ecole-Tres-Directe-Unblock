@@ -9,7 +9,8 @@
 	"host_permissions": [
 		"*://*.ecole-tres-directe.vercel.app/*",
 		"*://*.ecoledirecte.com/*",
-		"*://api.ecoledirecte.com/mot-de-passe-oublie.awp"
+		"*://api.ecoledirecte.com/mot-de-passe-oublie.awp",
+		"*://localhost:3000/*"
 	],
 	"background": {
 		"service_worker": "service-worker.js"

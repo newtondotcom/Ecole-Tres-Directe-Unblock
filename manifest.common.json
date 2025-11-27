@@ -14,7 +14,8 @@
 		},
 		{
 			"matches": [
-				"https://*.ecole-tres-directe.vercel.app/*"
+				"https://*.ecole-tres-directe.vercel.app/*",
+				"http://localhost:3000/*"
 			],
 			"js": [
 				"content-scripts/handlePostMessage.js",
