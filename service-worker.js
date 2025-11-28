@@ -1,4 +1,5 @@
 function getBrowser() {
+	/*
 	if (typeof chrome !== "undefined") {
 		if (typeof browser !== "undefined") {
 			return "Firefox";
@@ -8,6 +9,8 @@ function getBrowser() {
 	} else {
 		return "Edge";
 	}
+	*/
+	return "Firefox";
 }
 
 const userBrowser = getBrowser();

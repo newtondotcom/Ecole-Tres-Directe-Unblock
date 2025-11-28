@@ -1,11 +1,8 @@
-
-const api = typeof browser === "undefined" ? chrome : browser;
-
 const allowedDomains = ["ecole-tres-directe.vercel.app", "ecoledirecte.com"];
 
 async function getActiveTabDomain() {
 	let domain;
-	await api.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
+	await browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
 		let url = new URL(tabs[0].url);
 		domain = url.hostname;
 	}).catch((error) => {

@@ -1,17 +1,14 @@
 import fs from "fs";
 import path from "path";
 
-type SupportedBrowser = "chromium" | "firefox";
+type SupportedBrowser = "firefox";
 
-const supportedBrowsers: SupportedBrowser[] = ["chromium", "firefox"];
+const supportedBrowsers: SupportedBrowser[] = ["firefox"];
 
 function mergeManifest(browser: SupportedBrowser): void {
 	let browserManifestFileName: string;
 
 	switch (browser) {
-		case "chromium":
-			browserManifestFileName = "manifest.chromium.json";
-			break;
 		case "firefox":
 			browserManifestFileName = "manifest.firefox.json";
 			break;
