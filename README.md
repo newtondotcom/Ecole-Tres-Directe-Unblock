@@ -17,7 +17,7 @@ This extension provides the following features to Ecole Tres Directe :
 
 ## Contributing
 
-- Clone the repository: `git clone https://github.com/Magic-Fishes/Ecole-Directe-Plus-Unblock.git`
+- Clone the repository: `git clone https://github.com/newtondotcom/Ecole-Tres-Directe-Unblock`
 - Run `node build.js firefox`. You will find the output in `dist/`
 - On your browser, go about:debugging and enable developer mode
 - Load the unpacked extension (the browser looks either for the `manifest.json` or for the folder where the `manifest.json` file is located)

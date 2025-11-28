@@ -19,15 +19,6 @@ browser.declarativeNetRequest.updateEnabledRulesets(
 	{ enableRulesetIds: ["change_origin"] }
 )
 
-// browser.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-// 	if (changeInfo.status === "complete") {
-// 		browser.scripting.executeScript({
-// 			target: { tabId: tab.id },
-// 			files: ["content-scripts/DOMInjectionBridge.js"]
-// 		});
-// 	}
-// });
-
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
 	if (message.type === "GET_EXTENSION_INFO") {
 		const extensionInfo = {
