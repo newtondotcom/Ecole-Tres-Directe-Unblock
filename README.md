@@ -4,10 +4,10 @@
 
 
 > [!IMPORTANT]
-> Ecole Tres Directe extension only works for the [Ecole Tres Directe](https://ecole-tres-directe.vercel.app) website and [localhost:3000](http://localhost:3000) for developement purposes !
+> Ecole Tres Directe extension only works for the [Ecole Tres Directe](https://ecole-tres-directe.eu) website and [localhost:3000](http://localhost:3000) for developement purposes !
 
 
-**Haven't tried Ecole Tres Directe yet? Try it at [ecole-tres-directe.vercel.app](https://ecole-tres-directe.vercel.app)**
+**Haven't tried Ecole Tres Directe yet? Try it at [ecole-tres-directe.eu](https://ecole-tres-directe.eu)**
 
 This extension provides the following features to Ecole Tres Directe :
 

@@ -7,7 +7,7 @@
 		"webRequest"
 	],
 	"host_permissions": [
-		"*://*.ecole-tres-directe.vercel.app/*",
+		"*://*.ecole-tres-directe.eu/*",
 		"*://*.ecoledirecte.com/*",
 		"*://api.ecoledirecte.com/mot-de-passe-oublie.awp",
 		"*://localhost/*"
@@ -32,7 +32,7 @@
 	},
 	"browser_specific_settings": {
 		"gecko": {
-			"id": "etdu-firefox-self-host@ecole-tres-directe.vercel.app",
+			"id": "etdu-firefox-self-host@ecole-tres-directe.eu",
 			"update_url": "https://raw.githubusercontent.com/newtondotcom/Ecole-Tres-Directe-Unblock/main/updates.json",
 			"data_collection_permissions": {
 			"required": ["authenticationInfo", "websiteContent"],

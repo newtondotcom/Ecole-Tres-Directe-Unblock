@@ -1,4 +1,4 @@
-const allowedDomains = ["ecole-tres-directe.vercel.app", "ecoledirecte.com"];
+const allowedDomains = ["ecole-tres-directe.eu", "ecoledirecte.com"];
 
 async function getActiveTabDomain() {
 	let domain;

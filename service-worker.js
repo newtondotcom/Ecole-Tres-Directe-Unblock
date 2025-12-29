@@ -31,7 +31,7 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 function sendEdpMessage(message) {
-	browser.tabs.query({ url: ["https://*.ecole-tres-directe.vercel.app/*", "http://localhost/*"] }, (tabs) => {
+	browser.tabs.query({ url: ["https://*.ecole-tres-directe.eu/*", "http://localhost/*"] }, (tabs) => {
 		tabs.forEach(tab => {
 			browser.tabs.sendMessage(tab.id, message);
 		});

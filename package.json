@@ -1,7 +1,7 @@
 {
     "name": "ecole-tres-directe-unblock",
     "description": "Permet le fonctionnement du site Ecole Tres Directe sur PC. Fait la passerelle entre votre ordinateur et l'API d'EcoleDirecte.",
-    "homepage_url": "https://ecole-tres-directe.vercel.app/etd-unblock",
+    "homepage_url": "https://ecole-tres-directe.eu/etd-unblock",
     "scripts": {
         "sign": "web-ext sign --api-key $AMO_JWT_ISSUER --api-secret $AMO_JWT_SECRET --source-dir ./dist/firefox --channel unlisted",
         "firefox": "bun build.js firefox"

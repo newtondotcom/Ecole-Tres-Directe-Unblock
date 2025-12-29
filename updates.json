@@ -1,6 +1,6 @@
 {
   "addons": {
-    "{etdu-firefox-self-host@ecole-tres-directe.vercel.app}": {
+    "{etdu-firefox-self-host@ecole-tres-directe.eu}": {
       "updates": [
         {
           "version": "0.2.9.2",
